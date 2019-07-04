@@ -1,0 +1,7 @@
+Python OPENCV and Skimage
+Execução completa: 1.78077 sec
+Watershed: 0.39018 sec
+
+C++ OPENCV
+Execução completa: 0.595 sec
+Watershed: 0.272 sec

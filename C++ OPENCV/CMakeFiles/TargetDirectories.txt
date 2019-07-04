@@ -1,0 +1,3 @@
+/home/mrx/Área de Trabalho/TEEC1/Watershed/C++ OPENCV/CMakeFiles/rebuild_cache.dir
+/home/mrx/Área de Trabalho/TEEC1/Watershed/C++ OPENCV/CMakeFiles/DisplayImage.dir
+/home/mrx/Área de Trabalho/TEEC1/Watershed/C++ OPENCV/CMakeFiles/edit_cache.dir

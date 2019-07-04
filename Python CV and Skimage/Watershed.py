@@ -7,6 +7,9 @@ import argparse
 import imutils
 import cv2
 import time
+import datetime
+
+
 
 
 # load the image and perform pyramid mean shift filtering
@@ -32,7 +35,9 @@ localMax = peak_local_max(D, indices=False, min_distance=30,
 # perform a connected component analysis on the local peaks,
 # using 8-connectivity, then appy the Watershed algorithm
 markers = ndimage.label(localMax, structure=np.ones((3, 3)))[0]
+print(datetime.datetime.now())
 labels = watershed(-D, markers, mask=thresh)
+print(datetime.datetime.now())
 
 print("[INFO] {} unique segments found".format(len(np.unique(image)) - 1))
 
@@ -59,6 +64,7 @@ for label in np.unique(labels):
     cv2.circle(image, (int(x), int(y)), int(r), (0, 255, 0), 2)
     cv2.putText(image, "#{}".format(label), (int(x) - 10, int(y)),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+
 
 
 # show the output image

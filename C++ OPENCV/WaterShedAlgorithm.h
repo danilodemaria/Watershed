@@ -10,16 +10,42 @@
 #include <opencv2/highgui.hpp>
 #include <string>
 #include <queue>
+#include <time.h>
+#include <math.h>
+#include <sys/time.h>
 #include "WatershedStructure.h"
+
+
 
 class WatershedAlgorithm {
     static const int HMIN = 0;	
     static const int HMAX = 256;
 
+    char buffer[30];
+  	int millisec;
+  	struct tm* tm_info;
+  	struct timeval tv;
+
+public: void hora(){
+    gettimeofday(&tv, NULL);
+
+  	millisec = lrint(tv.tv_usec/1000.0); // Round to nearest millisec
+  	if (millisec>=1000) { // Allow for rounding up to nearest second
+    	millisec -=1000;
+    	tv.tv_sec++;
+  	}
+
+  	tm_info = localtime(&tv.tv_sec);
+
+  	strftime(buffer, 26, "%Y:%m:%d %H:%M:%S", tm_info);
+  	printf("%s.%03d\n", buffer, millisec);
+    printf("\n");
+}
+
 public:
     void run(IplImage* pSrc, const std::string& imgName) { 
         std::string inTmp;
-
+        
 		
         IplImage* pGray = cvCreateImage(cvGetSize(pSrc), IPL_DEPTH_8U, 1);
         if (pSrc->nChannels == 3) {
@@ -51,7 +77,12 @@ public:
         int heightIndex1 = 0;
         int heightIndex2 = 0;
 
+        
+        // aqui função 01
         for (int h = HMIN; h < HMAX; ++h) { 
+            
+            printf("Inicio função 01 -");
+            hora();
             for (int pixelIndex = heightIndex1 ; pixelIndex < watershedStructure.size() ; ++pixelIndex) {
                 WatershedPixel* p = watershedStructure.at(pixelIndex);
 
@@ -71,7 +102,13 @@ public:
 
             int curdist = 1;
             pque.push(new WatershedPixel());
+            printf("Fim função 01 ");
+            hora();
+            //fim função 01
 
+            printf("Inicio função 02 ");
+            hora();
+            //inicio função 02
             while (true) { 
                 WatershedPixel* p = pque.front(); pque.pop();
 
@@ -103,8 +140,14 @@ public:
                     }
                 } 
             } 
+            printf("Fim função 02 ");
+            hora();
+            // fim função 02
 
             
+            printf("Inicio função 03 ");
+            hora();
+            // inicio função 03
             for (int pixelIndex = heightIndex2 ; pixelIndex < watershedStructure.size() ; pixelIndex++) {
                 WatershedPixel* p = watershedStructure.at(pixelIndex);
 
@@ -132,7 +175,14 @@ public:
                     } // end while
                 } // end if
             } // end for
+            printf("Fim função 03 ");
+            hora();
+            
+            // fim função 03
+
         }
+
+        
 		
 
 		
@@ -151,6 +201,8 @@ public:
                 grayPixels[p->getX() + p->getY()*width] = (char)255;	
             }
         }
+
+
         inTmp = imgName + "_WS.bmp"; 
         cv::Mat m3 = cv::cvarrToMat(pWS);
         cv::imwrite(inTmp.c_str(), m3);
