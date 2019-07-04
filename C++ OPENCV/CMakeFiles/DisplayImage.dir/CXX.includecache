@@ -21,6 +21,8 @@ math.h
 -
 sys/time.h
 -
+chrono
+-
 WatershedStructure.h
 /home/mrx/Área de Trabalho/TEEC1/Watershed/C++ OPENCV/WatershedStructure.h
 

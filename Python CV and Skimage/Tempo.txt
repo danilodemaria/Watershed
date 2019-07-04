@@ -5,3 +5,18 @@ Watershed: 0.39018 sec
 C++ OPENCV
 Execução completa: 0.595 sec
 Watershed: 0.272 sec
+
+
+C++ OPENCV
+Função 01: 
+
+Funçã0 02:
+
+Função 03:
+
+
+
+Python
+Função 01:  0.15187899999999993
+Função 02:  0.16894800000000004
+Função 03:  0.15404999999999977

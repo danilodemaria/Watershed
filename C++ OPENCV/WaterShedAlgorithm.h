@@ -13,39 +13,21 @@
 #include <time.h>
 #include <math.h>
 #include <sys/time.h>
+#include <chrono> 
 #include "WatershedStructure.h"
 
-
+using namespace std::chrono;
+using namespace std; 
 
 class WatershedAlgorithm {
     static const int HMIN = 0;	
     static const int HMAX = 256;
-
-    char buffer[30];
-  	int millisec;
-  	struct tm* tm_info;
-  	struct timeval tv;
-
-public: void hora(){
-    gettimeofday(&tv, NULL);
-
-  	millisec = lrint(tv.tv_usec/1000.0); // Round to nearest millisec
-  	if (millisec>=1000) { // Allow for rounding up to nearest second
-    	millisec -=1000;
-    	tv.tv_sec++;
-  	}
-
-  	tm_info = localtime(&tv.tv_sec);
-
-  	strftime(buffer, 26, "%Y:%m:%d %H:%M:%S", tm_info);
-  	printf("%s.%03d\n", buffer, millisec);
-    printf("\n");
-}
+    
 
 public:
     void run(IplImage* pSrc, const std::string& imgName) { 
         std::string inTmp;
-        
+        double aux1=0,aux2=0,aux3 = 0;
 		
         IplImage* pGray = cvCreateImage(cvGetSize(pSrc), IPL_DEPTH_8U, 1);
         if (pSrc->nChannels == 3) {
@@ -68,7 +50,7 @@ public:
         int width = pBW->width;
         int height = pBW->height;
 
-       
+       auto start1 = high_resolution_clock::now(); 
         WatershedStructure  watershedStructure(pixels, width, height);
 
 		
@@ -79,10 +61,10 @@ public:
 
         
         // aqui função 01
+        
         for (int h = HMIN; h < HMAX; ++h) { 
+
             
-            printf("Inicio função 01 -");
-            hora();
             for (int pixelIndex = heightIndex1 ; pixelIndex < watershedStructure.size() ; ++pixelIndex) {
                 WatershedPixel* p = watershedStructure.at(pixelIndex);
 
@@ -99,16 +81,18 @@ public:
                     if (q->getLabel() >= 0) { p->setDistance(1); pque.push(p); break; }
                 }
             }
+  
 
             int curdist = 1;
             pque.push(new WatershedPixel());
-            printf("Fim função 01 ");
-            hora();
+            //printf("Fim função 01 ");
+             
+            
             //fim função 01
 
-            printf("Inicio função 02 ");
-            hora();
-            //inicio função 02
+            //printf("Inicio função 02 ");
+            auto start2 = high_resolution_clock::now();
+            
             while (true) { 
                 WatershedPixel* p = pque.front(); pque.pop();
 
@@ -140,14 +124,10 @@ public:
                     }
                 } 
             } 
-            printf("Fim função 02 ");
-            hora();
-            // fim função 02
+            //printf("Fim função 02 ");
 
             
-            printf("Inicio função 03 ");
-            hora();
-            // inicio função 03
+            //printf("Inicio função 03 ");
             for (int pixelIndex = heightIndex2 ; pixelIndex < watershedStructure.size() ; pixelIndex++) {
                 WatershedPixel* p = watershedStructure.at(pixelIndex);
 
@@ -175,15 +155,18 @@ public:
                     } // end while
                 } // end if
             } // end for
-            printf("Fim função 03 ");
-            hora();
+            //printf("Fim função 03 ");
             
-            // fim função 03
 
         }
 
-        
-		
+        //printf("Função 01: %f Segundos\n",(aux1/1000000000));
+        //printf("Função 02: %f Segundos\n",(aux2/1000000000));
+        //printf("Função 03: %f Segundos\n",(aux3/1000000000));
+
+        auto stop1 = high_resolution_clock::now();
+        auto duration1 = duration_cast<nanoseconds>(stop1 - start1);
+        cout << duration1.count() << endl; 		
 
 		
         IplImage* pWS = cvCreateImage(cvGetSize(pBW), IPL_DEPTH_8U, 1);
