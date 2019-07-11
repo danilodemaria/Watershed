@@ -50,7 +50,7 @@ public:
         int width = pBW->width;
         int height = pBW->height;
 
-       auto start1 = high_resolution_clock::now(); 
+        
         WatershedStructure  watershedStructure(pixels, width, height);
 
 		
@@ -58,10 +58,10 @@ public:
         int curlab = 0;
         int heightIndex1 = 0;
         int heightIndex2 = 0;
-
+        
         
         // aqui função 01
-        
+        auto start = high_resolution_clock::now();
         for (int h = HMIN; h < HMAX; ++h) { 
 
             
@@ -91,7 +91,7 @@ public:
             //fim função 01
 
             //printf("Inicio função 02 ");
-            auto start2 = high_resolution_clock::now();
+           
             
             while (true) { 
                 WatershedPixel* p = pque.front(); pque.pop();
@@ -160,13 +160,10 @@ public:
 
         }
 
-        //printf("Função 01: %f Segundos\n",(aux1/1000000000));
-        //printf("Função 02: %f Segundos\n",(aux2/1000000000));
-        //printf("Função 03: %f Segundos\n",(aux3/1000000000));
 
-        auto stop1 = high_resolution_clock::now();
-        auto duration1 = duration_cast<nanoseconds>(stop1 - start1);
-        cout << duration1.count() << endl; 		
+        auto stop = high_resolution_clock::now();
+        auto duration = duration_cast<microseconds>(stop - start);
+        cout << duration.count() << endl; 		
 
 		
         IplImage* pWS = cvCreateImage(cvGetSize(pBW), IPL_DEPTH_8U, 1);

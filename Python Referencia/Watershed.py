@@ -83,13 +83,14 @@ class Watershed(object):
 
       start_index = 0
 	  
+      inicio = datetime.datetime.now() 
 	  # FUNCAO NUMERO 1
       
       for stop_index in level_indices:
          # print(stop_index)
          # Mask all pixels at the current level.
 
-         inicio01 = datetime.datetime.now() 
+         
          
          for p in sorted_pixels[start_index:stop_index]:
             # print("p {} = {} - start {} stop {} - h {}".format(p,p[0]*100+p[1],start_index,stop_index,reshaped_image[p[0]*100+p[1]]))
@@ -101,18 +102,12 @@ class Watershed(object):
                   labels[p[0], p[1]] = self.INQE
                   fifo.append(p)
                   break
-
-         fim01 = datetime.datetime.now()         
-         total1 = (fim01 - inicio01)
-         final1 = total1.total_seconds()  
-         result1 = result1 + final1
-         
+        
 
 
 		# FUNCAO NUMERO 2
       # Extend basins.
-         
-         inicio02 = datetime.datetime.now()       
+              
          while fifo:
             p = fifo.popleft()
             # Label p by inspecting neighbours.
@@ -133,17 +128,13 @@ class Watershed(object):
                elif lab_q == self.MASK:
                   labels[q[0], q[1]] = self.INQE
                   fifo.append(q)
-         
-         fim02 = datetime.datetime.now()         
-         total2 = (fim02 - inicio02)
-         final02 = total2.total_seconds()  
-         result2 = result2 + final02       
+ 
                   
 
 
 			# FUNCAO NUMERO 3
          # Detect and process new minima at the current level.
-         inicio03 = datetime.datetime.now()
+
          
          for p in sorted_pixels[start_index:stop_index]:
             # p is inside a new minimum. Create a new label.
@@ -160,15 +151,14 @@ class Watershed(object):
                         labels[r[0], r[1]] = current_label
 
          start_index = stop_index
-         fim03 = datetime.datetime.now()         
-         total3 = (fim03 - inicio03)
-         final03 = total3.total_seconds()  
-         result3 = result3 + final03  
+
+         fim = datetime.datetime.now()         
+         total = (fim - inicio)
+         final = total.total_seconds() 
          
 
-      print('Função 01: ',result1)
-      print('Função 02: ',result2)
-      print('Função 03: ',result3)
+      print('Tempo Total (us): ',(final*1000000))
+
       return labels
 
 if __name__ == "__main__":
