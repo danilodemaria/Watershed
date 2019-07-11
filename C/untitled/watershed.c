@@ -131,7 +131,7 @@ void quickSort(int *arr, int *arrp, int low, int high){
 }
 
 
-/* TIME FUNCTION LOCAL */
+/* TIME FUNCTION */
 
 double getRealTime( ){
 #if defined(_WIN32)
